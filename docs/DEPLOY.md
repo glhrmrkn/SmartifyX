@@ -20,6 +20,9 @@ cp -R integrations/opencode/skill/smartify ~/.config/opencode/skills/smartify
 # plugin (toasts + LOG/STATE)
 mkdir -p ~/.config/opencode/plugins/smartify
 cp integrations/opencode/plugins/smartify/smartify.js ~/.config/opencode/plugins/smartify/
+# comandos manuais /checkpoint e /remember
+mkdir -p ~/.config/opencode/command
+cp integrations/opencode/command/*.md ~/.config/opencode/command/
 # em opencode.json/.jsonc, adicione o caminho do plugin em "plugin": [...]
 # AGENTS global
 cp integrations/opencode/AGENTS.md ~/.config/opencode/AGENTS.md

@@ -1,3 +1,8 @@
+---
+name: smartify
+description: Roteador de módulos do protocolo Smartify. Use em qualquer tarefa de domínio (código, design, pesquisa, segurança, eng. reversa, gamedev, ensino, revisão, escrita, dados, meta, ops, cli, negócios, marketing) quando o Smartify estiver ativo — lê o índice e carrega SOMENTE o módulo certo. Invoque "/smartify check" para auto-diagnóstico da instalação.
+---
+
 # Smartify — roteador de módulos
 
 > Nota: caminhos abaixo assumem o repo em `E:/Tools/Smartify`. Se seu clone estiver em outro lugar,
@@ -37,3 +42,18 @@
 | negócios/estratégia | `modules/business.md` |
 | marketing/copy | `modules/marketing.md` |
 | nenhum dos acima | `modules/fallback.md` |
+
+## Modo `check` (auto-diagnóstico)
+
+Se a invocação tiver o argumento `check` (ex.: `/smartify check`), **não** roteie domínio
+nem leia módulo. Apenas verifique cada item abaixo e responda em tabela (OK/FALHA), sem inventar:
+
+| # | Item | Verificação |
+|---|---|---|
+| 1 | Núcleo | existe `E:/Tools/Smartify/V2/core/smartify.md` |
+| 2 | Índice | existe `E:/Tools/Smartify/V2/router/INDEX.md` |
+| 3 | Módulos | contagem de `*.md` em `E:/Tools/Smartify/V2/modules/` (esperado **16**) |
+| 4 | Ferramentas | existem `V2/tools/rememberx/` e `V2/tools/checkpoint/` |
+| 5 | Skill viva | esta skill carregou (frontmatter `name: smartify` válido) |
+
+Encerre com uma linha: `Smartify: OK` ou `Smartify: FALHA — <item que falhou>`.
