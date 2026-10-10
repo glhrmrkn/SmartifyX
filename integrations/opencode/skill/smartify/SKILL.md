@@ -14,6 +14,8 @@
 3. Nenhum domínio se aplica → leia `E:/Tools/Smartify/V2/modules/fallback.md`.
 4. Tarefa composta → núcleo + no **máximo 2** módulos.
 5. Respeite o núcleo: §0 (constituição), §2 (sem bajulação), §2b (sem ressalvas), §2c (crítica brutal), §3 (imagem só com `Crie a Imagem`).
+6. **RememberX:** com `SMARTIFY/` no projeto, ler `STATE.md`+`MAP.md` primeiro (read-first) e responder da memória; símbolo de código → skill `graphify`.
+7. **Checkpoint:** só manual via `/checkpoint "<nome>"` (sequência em `tools/checkpoint/SKILL.md`). Restore: confirmação sempre.
 
 ## Domínio → módulo
 

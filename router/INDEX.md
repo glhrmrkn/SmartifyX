@@ -31,3 +31,10 @@ Tamanho: núcleo sozinho já entrega 80%; acrescentar módulo quando o domínio 
 - Assunto ambíguo → núcleo / fallback.
 - Módulo inexistente → fallback, sem inventar.
 - Precedência: system > usuário > módulo.
+
+## Ferramentas (parte do Smartify)
+
+| Ferramenta | Onde | Regra |
+|---|---|---|
+| RememberX (memória anti re-auditoria) | `tools/rememberx/` | read-first STATE+MAP; símbolo → skill `graphify` |
+| Checkpoint (versões concluídas) | `tools/checkpoint/` | **100% manual** via `/checkpoint "<nome>"`; restore com confirmação |
