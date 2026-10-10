@@ -18,6 +18,7 @@ $RECYCLE.BIN/
 *.swo
 
 node_modules/
+*.zip
 
 # Nunca versionar segredos nem memória real de projeto
 .env
