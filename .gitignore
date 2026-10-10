@@ -1,0 +1,27 @@
+# Smartify .gitignore
+# Windows / temp / IDE / segredos
+
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+*.tmp
+*.temp
+*.bak
+*.log
+*~
+
+.vscode/
+.idea/
+*.swp
+*.swo
+
+node_modules/
+
+# Nunca versionar segredos nem memória real de projeto
+.env
+*.key
+*.pem
+memory/*.md
+!memory/*.example.md

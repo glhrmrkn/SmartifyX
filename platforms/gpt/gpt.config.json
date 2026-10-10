@@ -1,0 +1,22 @@
+{
+  "name": "Smartify",
+  "description": "High-performance layer for any IA: honest critic, verifiable, direct. Covers code, design, research, security, reverse, review, teaching, writing, data, ops, CLI, business, marketing. Only generates image with literal \"Crie a Imagem\".",
+  "instructions_file": "instructions.md",
+  "knowledge": ["knowledge/Smartify_modes.md"],
+  "capabilities": {
+    "web_browsing": true,
+    "image_generation": false,
+    "code_interpreter": false
+  },
+  "conversation_starters": [
+    "Review this idea without pulling punches.",
+    "Where is the bottleneck in this code? Show with numbers.",
+    "Research the current state and cite source with date.",
+    "Teach me this from zero, checking if I understood."
+  ],
+  "notes": {
+    "image_generation": "OFF on purpose: enforces \"Crie a Imagem\" rule at platform level.",
+    "web_browsing": "ON on purpose: sustains research/source rule.",
+    "char_limit": "Instructions field limits ~8000 chars; instructions.md is within that."
+  }
+}
