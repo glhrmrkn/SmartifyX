@@ -1,54 +1,122 @@
 # Smartify
 
-Eu cansei de IA que me bajula, enrola e "audita" o mesmo arquivo cinco vezes.
+A protocol that makes an AI answer directly, verify its claims, disagree when you're wrong, and stop padding responses with flattery and disclaimers. One core doctrine plus 16 domain modules. Installs into opencode, ChatGPT (Custom GPT), and Claude.
 
-Smartify é o protocolo que eu colo em qualquer IA pra ela parar de ser educada e começar a ser útil: responde direto, discorda de mim quando eu tô errado, verifica as coisas de verdade em vez de afirmar com confiança, e não me trata como criança com aviso de licença a cada frase.
+## Guarantees
 
-Não é mágica. Não deixa ninguém 10000% mais inteligente. Só tira o ruído e bota método. Na prática, é isso que separa resposta boa de resposta bonita.
+- No flattery, no preamble, no restating the request. Conclusion first.
+- No unrequested disclaimers (license, legal, terms). No moralizing.
+- Verified over asserted: build/test/measure run, or said plainly that it wasn't.
+- Non-trivial claims carry a source and a date. Model memory is treated as a hypothesis.
+- Pushes back on a wrong premise in one line, before executing.
+- Generates an image only on the literal phrase `Crie a Imagem`.
+- Smallest change that satisfies the request. No unrequested refactors.
 
-## O que ele garante
+## Install
 
-- Sem bajulação. Sem "ótima pergunta!". Conclusão primeiro.
-- Sem ressalva. Não pede permissão, não moraliza, não repete advertência.
-- Honestidade brutal. Se a ideia é ruim, ele diz que é ruim, em uma linha, e explica o porquê.
-- Verificação. Rodou build/teste/medida ou admitiu que não rodou. Sem meio-termo.
-- Fonte com data. Afirmação não trivial vem com origem ou não vem.
-- Imagem só se eu pedir literalmente `Crie a Imagem`. Fora isso, texto.
+### opencode (full setup: routing, session memory, plugin)
 
-## Como usar
+Config dir: `~/.config/opencode/` on macOS/Linux, `%USERPROFILE%\.config\opencode\` on Windows. Clone the repo somewhere and run the steps from the repo root.
 
-**ChatGPT** — `platforms/gpt/`: cola o `instructions.md` num Custom GPT e sobe o `knowledge/`. Guia completo no README da pasta.
+**1. Skill (domain router)**
 
-**Claude** — `platforms/claude/`: cola no Project ou salva como `CLAUDE.md` no Claude Code (aí ele ganha filesystem e memória de verdade).
-
-**opencode** — `integrations/opencode/`: skill + plugin + AGENTS global. É onde o Smartify fica completo, com roteamento automático por domínio e log de sessão. Ver `docs/DEPLOY.md`.
-
-## O que tem aqui
-
-```
-core/            o núcleo — a doutrina inteira num arquivo só
-modules/         16 módulos por domínio (código, design, pesquisa, segurança, review...)
-router/          índice de roteamento + molde pra criar módulo novo
-platforms/       pacote pronto pro GPT e pro Claude
-integrations/    skill + plugin do opencode
-memory/          exemplos de STATE/LOG/MAP (a "memória" do projeto)
-examples/        prompts de teste + before/after pra provar que funciona
-tools/           scorecard pra medir se a IA melhorou mesmo ou se é papo
-docs/            a teoria por trás (arquitetura, filosofia, deploy)
+```bash
+mkdir -p ~/.config/opencode/skills
+cp -R integrations/opencode/skill/smartify ~/.config/opencode/skills/smartify
 ```
 
-## EU QUERO VER ISSO CRESCER
+**2. Plugin (toasts + per-session `SMARTIFY/STATE.md` and `LOG.md`)**
 
-De verdade. Esse projeto só faz sentido se virar coisa de comunidade.
+```bash
+mkdir -p ~/.config/opencode/plugins/smartify
+cp integrations/opencode/plugins/smartify/smartify.js ~/.config/opencode/plugins/smartify/
+```
 
-**Dá fork. Modifica. Quebra. Melhora. Manda PR.**
+Register it in `~/.config/opencode/opencode.json`. Path specs resolve relative to the config file:
 
-Achei um módulo raso? Aprofunda. O roteador errou o domínio? Conserta. Faltou o domínio que você usa todo dia? Cria com o molde em `router/template.md` e manda. Quer uma integração nova? Manda.
+```json
+{
+  "plugin": ["./plugins/smartify/smartify.js"]
+}
+```
 
-Toda melhoria que deixar a IA mais honesta, mais verificável e menos enrolada é bem-vinda. Não precisa pedir permissão, não precisa ser perfeito — PR tosco que funciona vale mais que issue elegante.
+Alternative: drop the file at `plugins/smartify.js` (no subfolder) and opencode auto-discovers it — no config edit.
 
-A única regra: mantém o espírito. Direto, verificável, sem bajulação. O resto é negociável.
+**3. Commands `/checkpoint` and `/remember`**
 
-## Licença
+```bash
+mkdir -p ~/.config/opencode/command
+cp integrations/opencode/command/*.md ~/.config/opencode/command/
+```
 
-MIT. Faz o que quiser com isso — inclusive vender, desde que mantenha o crédito.
+**4. Global rules**
+
+```bash
+cp integrations/opencode/AGENTS.md ~/.config/opencode/AGENTS.md
+```
+
+**5. Point the files at your clone**
+
+The skill, the two commands, and `AGENTS.md` ship with the path `E:/Tools/Smartify` hardcoded. Do one of:
+
+- Clone the repo to `E:/Tools/Smartify` (Windows) and skip this step, or
+- Replace the path in `skills/smartify/SKILL.md`, `command/*.md`, and `AGENTS.md`:
+
+```bash
+# macOS/Linux
+grep -rl "E:/Tools/Smartify" \
+  ~/.config/opencode/skills/smartify \
+  ~/.config/opencode/command \
+  ~/.config/opencode/AGENTS.md \
+  | xargs sed -i 's#E:/Tools/Smartify#/path/to/Smartify#g'
+```
+
+```powershell
+# Windows (PowerShell) — preserves UTF-8 without BOM
+Get-ChildItem "$HOME\.config\opencode\skills\smartify", "$HOME\.config\opencode\command", "$HOME\.config\opencode\AGENTS.md" -Recurse -File | ForEach-Object {
+  $t = [IO.File]::ReadAllText($_.FullName)
+  [IO.File]::WriteAllText($_.FullName, $t.Replace('E:/Tools/Smartify', 'C:/path/to/Smartify'), (New-Object Text.UTF8Encoding $false))
+}
+```
+
+**6. Restart opencode**
+
+On the next session you get the toast `⚡ Smartify ativo`. Verify with `/smartify check` (prints OK/FAIL per component) or type `/` to see `/checkpoint` and `/remember`.
+
+### ChatGPT (Custom GPT)
+
+1. ChatGPT → Explore GPTs → Create → Configure.
+2. Instructions: paste `platforms/gpt/instructions.md`.
+3. Knowledge: upload `platforms/gpt/knowledge/Smartify_modes.md`.
+4. Capabilities: Web Browsing ON, Image generation OFF, Code Interpreter optional.
+5. Name, description, and starters: `platforms/gpt/gpt.config.json`.
+6. Save (private).
+
+Limit: a Custom GPT can't read local files. Session memory is the `ESTADO` block you paste back on reopen.
+
+### Claude
+
+- **Projects (chat):** upload `platforms/claude/Smartify_Claude.md` as project knowledge. Optionally add modules from `modules/`.
+- **Claude Code:** copy it to `CLAUDE.md` at your project root. It reads and updates `memory/STATE.md` for native memory.
+
+## Layout
+
+```
+core/            the doctrine, one file
+modules/         16 per-domain modules
+router/          routing index + module template
+platforms/       ready packages for GPT and Claude
+integrations/    opencode skill, plugin, commands, AGENTS.md
+memory/          example STATE / LOG / MAP / COMMANDS
+examples/        test prompts and before/after
+tools/           checkpoint, rememberx, eval scorecard
+docs/            architecture, philosophy, deploy
+```
+
+## Routing
+
+`router/INDEX.md` maps a task to one domain module: `code`, `design`, `research`, `security`, `reverse`, `gamedev`, `teach`, `review`, `writing`, `data`, `meta`, `ops`, `cli`, `business`, `marketing`, or `fallback`. The core alone covers most tasks; load a module only when the domain needs it, and at most two at once.
+
+## License
+
+MIT.
